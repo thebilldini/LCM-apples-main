@@ -3,7 +3,6 @@ const int buttonPin = 3; // the pin that the pushbutton is attached to = Purple
 const int count = 11; //= Blue
 const int sound = 12; //= Orange
 
-
 // Variables will change:
 int counter = 0; // counter for the number of button presses
 int buttonState = 0;
@@ -16,8 +15,6 @@ void setup() {
   // Initialize outputs:
   pinMode(sound, OUTPUT);
   pinMode(count, OUTPUT);
-  pinMode(forwards, OUTPUT);
-  pinMode(backwards, OUTPUT);
   
   Serial.begin(9600);
   
@@ -43,21 +40,23 @@ void loop() {
   
   // Activate outputs when counter reaches 4
   if (counter >= 4) {
+    Serial.println("Sauce counter reached 4, sending signal");
+    
     // Send signal to Apple Counter Arduino
     digitalWrite(count, HIGH);
-    delay(180);
+    delay(300); // Longer pulse for better detection
     digitalWrite(count, LOW);
-    delay(50);
     
     // Sound alert
     digitalWrite(sound, HIGH);
     delay(500);
     digitalWrite(sound, LOW);
-    delay(10);
-    
-    
     
     // Reset counter
     counter = 0;
+    Serial.println("Sauce counter reset");
+    
+    // Wait before accepting new button presses
+    delay(1000);
   }
 }

@@ -8,49 +8,35 @@
       "id": "main",
       "top": 125.4,
       "left": -125.4,
-      "attrs": { }
-    },
-    {
-      "type": "wokwi-arduino-uno",
-      "id": "juice",
-      "top": 269.4,
-      "left": 306.6,
-      "attrs": { }
-    },
-    {
-      "type": "wokwi-arduino-uno",
-      "id": "sauce",
-      "top": -201,
-      "left": 297,
-      "attrs": { }
-    },
-    {
-      "type": "wokwi-arduino-uno",
-      "id": "pie",
-      "top": 29.4,
-      "left": 306.6,
-      "attrs": { }
+      "attrs": { "code": "wokwi_simulation.ino" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "btn_juice",
-      "top": 326.4,
-      "left": 460.8,
+      "top": 269.4,
+      "left": 306.6,
       "attrs": { "color": "blue" }
     },
     {
       "type": "wokwi-pushbutton", 
       "id": "btn_sauce",
-      "top": -144,
-      "left": 451.2,
+      "top": -201,
+      "left": 297,
       "attrs": { "color": "red" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "btn_pie", 
-      "top": 86.4,
-      "left": 460.8,
+      "top": 29.4,
+      "left": 306.6,
       "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-7segment",
+      "id": "display",
+      "top": 50,
+      "left": -300,
+      "attrs": {}
     },
     {
       "type": "wokwi-led",
@@ -82,6 +68,27 @@
     },
     {
       "type": "wokwi-led",
+      "id": "juice_signal",
+      "top": 170,
+      "left": -200,
+      "attrs": { "color": "blue" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "sauce_signal",
+      "top": 200,
+      "left": -200,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "pie_signal",
+      "top": 230,
+      "left": -200,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-led",
       "id": "juice_sound",
       "top": 240,
       "left": 500,
@@ -103,40 +110,43 @@
     }
   ],
   "connections": [
-    [ "main:GND.1", "juice:GND.1", "black", [ "v0" ] ],
-    [ "main:GND.1", "sauce:GND.1", "black", [ "v0" ] ],
-    [ "main:GND.1", "pie:GND.1", "black", [ "v0" ] ],
+    [ "btn_juice:1.l", "main:A0", "blue", [ "v0" ] ],
+    [ "btn_juice:2.l", "main:GND.1", "black", [ "v0" ] ],
     
-    [ "juice:11", "main:3", "green", [ "v-19.2", "h-100", "v-105.6", "h-268.8", "v-30.4" ] ],
-    [ "sauce:11", "main:4", "blue", [ "v19.2", "h-100", "v105.6", "h-268.8", "v30.4" ] ],
-    [ "pie:11", "main:5", "orange", [ "v0", "h-100", "v0", "h-268.8", "v0" ] ],
+    [ "btn_sauce:1.l", "main:A1", "red", [ "v0" ] ],
+    [ "btn_sauce:2.l", "main:GND.1", "black", [ "v0" ] ],
     
-    [ "btn_juice:1.l", "juice:3", "red", [ "v0" ] ],
-    [ "btn_juice:2.l", "juice:GND.2", "black", [ "v0" ] ],
-    
-    [ "btn_sauce:1.l", "sauce:3", "red", [ "v0" ] ],
-    [ "btn_sauce:2.l", "sauce:GND.2", "black", [ "v0" ] ],
-    
-    [ "btn_pie:1.l", "pie:3", "red", [ "v0" ] ],
-    [ "btn_pie:2.l", "pie:GND.2", "black", [ "v0" ] ],
+    [ "btn_pie:1.l", "main:A2", "green", [ "v0" ] ],
+    [ "btn_pie:2.l", "main:GND.1", "black", [ "v0" ] ],
     
     [ "main:11", "main_light:A", "yellow", [ "v0" ] ],
     [ "main:12", "main_sound:A", "red", [ "v0" ] ],
     [ "main:7", "main_motor_fwd:A", "green", [ "v0" ] ],
     [ "main:6", "main_motor_back:A", "orange", [ "v0" ] ],
+    
+    [ "main:8", "juice_signal:A", "blue", [ "v0" ] ],
+    [ "main:9", "sauce_signal:A", "red", [ "v0" ] ],
+    [ "main:10", "pie_signal:A", "green", [ "v0" ] ],
+    
+    [ "main:A3", "juice_sound:A", "blue", [ "v0" ] ],
+    [ "main:A4", "sauce_sound:A", "red", [ "v0" ] ],
+    [ "main:A5", "pie_sound:A", "green", [ "v0" ] ],
+    
     [ "main:GND.2", "main_light:C", "black", [ "v0" ] ],
     [ "main_light:C", "main_sound:C", "black", [ "v0" ] ],
     [ "main_sound:C", "main_motor_fwd:C", "black", [ "v0" ] ],
     [ "main_motor_fwd:C", "main_motor_back:C", "black", [ "v0" ] ],
+    [ "main_motor_back:C", "juice_signal:C", "black", [ "v0" ] ],
+    [ "juice_signal:C", "sauce_signal:C", "black", [ "v0" ] ],
+    [ "sauce_signal:C", "pie_signal:C", "black", [ "v0" ] ],
+    [ "pie_signal:C", "juice_sound:C", "black", [ "v0" ] ],
+    [ "juice_sound:C", "sauce_sound:C", "black", [ "v0" ] ],
+    [ "sauce_sound:C", "pie_sound:C", "black", [ "v0" ] ],
     
-    [ "juice:12", "juice_sound:A", "blue", [ "v0" ] ],
-    [ "juice:GND.3", "juice_sound:C", "black", [ "v0" ] ],
-    
-    [ "sauce:12", "sauce_sound:A", "red", [ "v0" ] ],
-    [ "sauce:GND.3", "sauce_sound:C", "black", [ "v0" ] ],
-    
-    [ "pie:12", "pie_sound:A", "green", [ "v0" ] ],
-    [ "pie:GND.3", "pie_sound:C", "black", [ "v0" ] ]
+    [ "display:VCC", "main:5V", "red", [ "v0" ] ],
+    [ "display:GND", "main:GND.3", "black", [ "v0" ] ],
+    [ "display:SDA", "main:A4", "green", [ "v0" ] ],
+    [ "display:SCL", "main:A5", "yellow", [ "v0" ] ]
   ],
   "dependencies": {}
 }

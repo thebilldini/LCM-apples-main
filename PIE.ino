@@ -38,19 +38,23 @@ void loop() {
   
   // Activate outputs when counter reaches 4
   if (counter >= 4) {
+    Serial.println("Pie counter reached 4, sending signal");
+    
     // Send signal to Apple Counter Arduino
     digitalWrite(count, HIGH);
-    delay(180);
+    delay(300); // Longer pulse for better detection
     digitalWrite(count, LOW);
-    delay(50);
     
     // Sound alert
     digitalWrite(sound, HIGH);
     delay(500);
     digitalWrite(sound, LOW);
-    delay(10);
     
     // Reset counter
     counter = 0;
+    Serial.println("Pie counter reset");
+    
+    // Wait before accepting new button presses
+    delay(1000);
   }
 }
