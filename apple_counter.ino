@@ -37,9 +37,9 @@ void setup() {
   matrix.begin(0x70);
   
   // Initialize pins
-  pinMode(buttonPinA, INPUT);
-  pinMode(buttonPinB, INPUT);
-  pinMode(buttonPinC, INPUT);
+  pinMode(buttonPinA, INPUT_PULLUP); // Pull-up for juice signal
+  pinMode(buttonPinB, INPUT_PULLUP); // Pull-up for sauce signal  
+  pinMode(buttonPinC, INPUT_PULLUP); // Pull-up for pie signal
   pinMode(light, OUTPUT);
   pinMode(sound, OUTPUT);
   pinMode(forwards, OUTPUT);
@@ -62,8 +62,8 @@ void loop() {
   buttonStateB = digitalRead(buttonPinB);
   buttonStateC = digitalRead(buttonPinC);
   
-  // Check for button presses with debouncing
-  if (buttonStateA != lastButtonStateA && buttonStateA == HIGH) {
+  // Check for button presses with debouncing (now looking for LOW signals)
+  if (buttonStateA != lastButtonStateA && buttonStateA == LOW) {
     if ((millis() - lastDebounceTimeA) > debounceDelay) {
       counter++;
       lastDebounceTimeA = millis();
@@ -71,7 +71,7 @@ void loop() {
       Serial.println(counter);
     }
   }
-  if (buttonStateB != lastButtonStateB && buttonStateB == HIGH) {
+  if (buttonStateB != lastButtonStateB && buttonStateB == LOW) {
     if ((millis() - lastDebounceTimeB) > debounceDelay) {
       counter++;
       lastDebounceTimeB = millis();
@@ -79,7 +79,7 @@ void loop() {
       Serial.println(counter);
     }
   }
-  if (buttonStateC != lastButtonStateC && buttonStateC == HIGH) {
+  if (buttonStateC != lastButtonStateC && buttonStateC == LOW) {
     if ((millis() - lastDebounceTimeC) > debounceDelay) {
       counter++;
       lastDebounceTimeC = millis();

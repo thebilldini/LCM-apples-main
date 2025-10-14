@@ -15,6 +15,7 @@ void setup() {
   // Initialize outputs:
   pinMode(sound, OUTPUT);
   pinMode(count, OUTPUT);
+  digitalWrite(count, HIGH); // Initialize count pin HIGH for pull-up logic
   
   Serial.begin(9600);
 }
@@ -37,13 +38,13 @@ void loop() {
   }
   
   // Activate outputs when counter reaches 4
-  if (counter >= 4) {
+  if (counter >= 3) {
     Serial.println("Pie counter reached 4, sending signal");
     
-    // Send signal to Apple Counter Arduino
-    digitalWrite(count, HIGH);
-    delay(300); // Longer pulse for better detection
+    // Send signal to Apple Counter Arduino (pull-up logic: send LOW)
     digitalWrite(count, LOW);
+    delay(300); // Longer pulse for better detection
+    digitalWrite(count, HIGH);
     
     // Sound alert
     digitalWrite(sound, HIGH);

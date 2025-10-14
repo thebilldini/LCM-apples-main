@@ -15,6 +15,7 @@ void setup() {
   // Initialize outputs:
   pinMode(sound, OUTPUT);
   pinMode(count, OUTPUT);
+  digitalWrite(count, HIGH); // Initialize count pin HIGH for pull-up logic
   
   Serial.begin(9600);
 }
@@ -31,20 +32,20 @@ void loop() {
       counter++;
       Serial.println(counter);
       // Delay a little bit to avoid bouncing
-      delay(50);
+      delay(500);
     }
     // Save the current state as the last state for next time through the loop
     lastButtonState = buttonState;
   }
   
   // Activate outputs when counter reaches 6
-  if (counter >= 6) {
+  if (counter >= 3) {
     Serial.println("Juice counter reached 6, sending signal");
     
-    // Send signal to Apple Counter Arduino
-    digitalWrite(count, HIGH);
-    delay(300); // Longer pulse for better detection
+    // Send signal to Apple Counter Arduino (pull-up logic: send LOW)
     digitalWrite(count, LOW);
+    delay(300); // Longer pulse for better detection
+    digitalWrite(count, HIGH);
     
     // Sound alert
     digitalWrite(sound, HIGH);
@@ -56,6 +57,6 @@ void loop() {
     Serial.println("Juice counter reset");
     
     // Wait before accepting new button presses
-    delay(1000);
+    delay(3000);
   }
 }
