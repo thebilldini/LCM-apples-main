@@ -29,8 +29,9 @@ unsigned long debounceDelay = 200; // 200ms debounce delay
 
 // Sequence control variables
 bool sequenceActive = false;
-unsigned long sequenceStartTime = 0;
+unsigned long sequenceTimer = 0;
 int sequenceStep = 0;
+int blinkCount = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -96,69 +97,60 @@ void loop() {
   // Trigger at 10 count
   if (counter >= 10) {
     sequenceActive = true;
-    sequenceStartTime = millis();
+    sequenceTimer = millis();
     sequenceStep = 0;
+    blinkCount = 0;
     Serial.println("Starting sequence at count 10");
   }
 }
 
 void handleSequence() {
-  unsigned long currentTime = millis();
-  unsigned long elapsed = currentTime - sequenceStartTime;
+  // Display "10" for 20 seconds
+  matrix.print(10);
+  matrix.writeDisplay();
+  delay(2000); // Wait 20 seconds
   
-  switch (sequenceStep) {
-    case 0: // Flash display
-      if (elapsed < 2000) { // Flash for 2 seconds
-        matrix.print((elapsed / 250) % 2 == 0 ? 0 : 20);
-        matrix.writeDisplay();
-      } else {
-        sequenceStep = 1;
-        sequenceStartTime = currentTime;
-        // Activate outputs
-        digitalWrite(light, HIGH);
-        digitalWrite(sound, HIGH);
-        // Motor forward
-        digitalWrite(forwards, LOW);
-        digitalWrite(backwards, HIGH);
-        Serial.println("Motor forward, lights/sound on");
-      }
-      break;
-      
-    case 1: // Motor forward
-      if (elapsed >= 15000) { // 15 seconds forward
-        sequenceStep = 2;
-        sequenceStartTime = currentTime;
-        // Motor stop
-        digitalWrite(forwards, HIGH);
-        digitalWrite(backwards, HIGH);
-        // Turn off alerts
-        digitalWrite(light, LOW);
-        digitalWrite(sound, LOW);
-        Serial.println("Motor stopped, lights/sound off");
-      }
-      break;
-      
-    case 2: // Motor backward
-      if (elapsed >= 1000) { // 1 second pause
-        sequenceStep = 3;
-        sequenceStartTime = currentTime;
-        // Motor backward
-        digitalWrite(forwards, HIGH);
-        digitalWrite(backwards, LOW);
-        Serial.println("Motor backward");
-      }
-      break;
-      
-    case 3: // Complete sequence
-      if (elapsed >= 15000) { // 15 seconds backward
-        // Motor off
-        digitalWrite(forwards, LOW);
-        digitalWrite(backwards, LOW);
-        // Reset
-        counter = 0;
-        sequenceActive = false;
-        Serial.println("Sequence complete, counter reset");
-      }
-      break;
-  }
+  // Countdown 3, 2, 1, 0
+  matrix.print(3);
+  matrix.writeDisplay();
+  delay(1000);
+  
+  matrix.print(2);
+  matrix.writeDisplay();
+  delay(1000);
+  
+  matrix.print(1);
+  matrix.writeDisplay();
+  delay(1000);
+  
+  matrix.print(0);
+  matrix.writeDisplay();
+  delay(1000);
+  
+  // Start sounds and lights
+  digitalWrite(light, HIGH);
+  digitalWrite(sound, HIGH);
+  Serial.println("Sounds and lights on");
+  delay(3000); // Wait 3 seconds
+  
+  // Open basket
+  digitalWrite(forwards, LOW);
+  digitalWrite(backwards, HIGH);
+  Serial.println("Basket opening");
+  delay(15000); // Open for 15 seconds
+  
+  // Turn off lights and sounds, close basket
+  digitalWrite(light, LOW);
+  digitalWrite(sound, LOW);
+  digitalWrite(forwards, HIGH);
+  digitalWrite(backwards, LOW);
+  Serial.println("Lights/sounds off, basket closing");
+  delay(25000); // Close for 25 seconds
+  
+  // Stop motors and reset
+  digitalWrite(forwards, LOW);
+  digitalWrite(backwards, LOW);
+  counter = 0;
+  sequenceActive = false;
+  Serial.println("Sequence complete, counter reset");
 }
